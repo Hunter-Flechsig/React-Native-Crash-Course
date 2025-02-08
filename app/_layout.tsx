@@ -1,13 +1,14 @@
 // rnfes - react native functional component with styles
 
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import "../global.css";
 import { useFonts } from 'expo-font'
-
-import { Slot, Stack } from 'expo-router' 
-// Slot:renders current child route
+import { Slot, SplashScreen, Stack } from 'expo-router' 
+// Slot:renders current child router
 // Stack: 
+
+SplashScreen.preventAutoHideAsync();
  
 const RootLayout = () => {
   const [fontsLoaded, error] = useFonts({
@@ -21,6 +22,14 @@ const RootLayout = () => {
     "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
     "Poppins-Thin": require("../assets/fonts/Poppins-Thin.ttf"),
   });
+
+  useEffect(() => {
+    if(error) throw error
+
+    if(fontsLoaded) SplashScreen.hideAsync();
+  }, [fontsLoaded, error])
+
+  if(!fontsLoaded && !error) return null;
   
   return (
     <>
@@ -28,7 +37,7 @@ const RootLayout = () => {
           <Stack.Screen name="index" options={{ headerShown: false }} />
         </Stack>
     </>
-  )
+  );
 }
 
 export default RootLayout
